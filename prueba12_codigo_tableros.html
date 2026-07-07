@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>El código de los tableros</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night: #0c1f2e;
+    --night-deep: #081620;
+    --parchment: #e9dcb6;
+    --parchment-dark: #d6c48f;
+    --ink: #2b2013;
+    --ink-soft: #4a3a22;
+    --gold: #c9a24b;
+    --gold-bright: #e3bf6d;
+    --red: #7c2b26;
+    --teal: #1d4a3e;
+    --error: #a33333;
+    --success: #2f5c3a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--night);
+    min-height: 100vh;
+    font-family: 'IM Fell English', serif;
+    color: var(--ink);
+  }
+  body {
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255,255,255,0.06) 0%, transparent 2%),
+      radial-gradient(circle at 80% 30%, rgba(255,255,255,0.05) 0%, transparent 2%),
+      radial-gradient(circle at 60% 70%, rgba(255,255,255,0.04) 0%, transparent 2%),
+      radial-gradient(circle at 35% 85%, rgba(255,255,255,0.05) 0%, transparent 2%),
+      radial-gradient(circle at 90% 80%, rgba(255,255,255,0.04) 0%, transparent 2%),
+      linear-gradient(180deg, var(--night-deep) 0%, var(--night) 60%, #0a1c2a 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 16px 80px;
+  }
+
+  .dust { position: fixed; border-radius: 50%; background: var(--gold-bright); opacity: 0; pointer-events: none;
+    box-shadow: 0 0 6px 2px rgba(227,191,109,0.8); animation: twinkle 4s infinite ease-in-out; }
+  @keyframes twinkle { 0%,100% { opacity: 0; transform: translateY(0) scale(0.6); } 50% { opacity: 0.9; transform: translateY(-12px) scale(1); } }
+
+  .scroll {
+    position: relative;
+    max-width: 620px;
+    width: 100%;
+    background: var(--parchment);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(255,255,255,0.15), transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(0,0,0,0.08), transparent 60%);
+    border: 2px solid var(--ink-soft);
+    border-radius: 6px;
+    padding: 44px 40px 40px;
+    box-shadow: 0 0 0 6px var(--night-deep), 0 20px 50px rgba(0,0,0,0.6);
+  }
+  .scroll::before, .scroll::after {
+    content: "";
+    position: absolute;
+    left: -2px; right: -2px;
+    height: 18px;
+    background: repeating-linear-gradient(90deg, var(--parchment-dark) 0 14px, var(--parchment) 14px 28px);
+    border: 2px solid var(--ink-soft);
+  }
+  .scroll::before { top: -18px; border-radius: 6px 6px 0 0; }
+  .scroll::after { bottom: -18px; border-radius: 0 0 6px 6px; }
+
+  .eyebrow {
+    font-family: 'IM Fell English SC', serif;
+    text-align: center;
+    letter-spacing: 3px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  h1 {
+    font-family: 'Pirata One', serif;
+    text-align: center;
+    font-size: 34px;
+    margin: 0 0 20px;
+    color: var(--red);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+    letter-spacing: 1px;
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 10px; margin: 20px 0;
+    color: var(--gold); opacity: 0.8;
+  }
+  .divider::before, .divider::after {
+    content: ""; flex: 1; height: 1px; background: var(--ink-soft); opacity: 0.4;
+  }
+  .divider span { font-size: 18px; }
+
+  .message {
+    font-size: 18px;
+    line-height: 1.6;
+    font-style: italic;
+    text-align: center;
+    color: var(--ink);
+    padding: 0 6px;
+  }
+
+  .board-badge {
+    display: block;
+    margin: 6px auto 22px;
+    width: fit-content;
+    font-family: 'Pirata One', serif;
+    font-size: 26px;
+    color: var(--parchment);
+    background: var(--teal);
+    padding: 8px 30px;
+    border-radius: 30px;
+    border: 2px solid #10302a;
+    letter-spacing: 2px;
+    text-align: center;
+  }
+
+  button {
+    font-family: 'IM Fell English SC', serif;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: none;
+  }
+
+  .code-label {
+    text-align: center;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  .coord-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .coord-inputs input {
+    width: 82px;
+    height: 54px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 20px;
+    font-family: 'IM Fell English SC', serif;
+    color: var(--ink);
+    background: #f4ead0;
+    border: 2px solid var(--ink-soft);
+    border-radius: 8px;
+    outline: none;
+  }
+  .coord-inputs input:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(124,43,38,0.2);
+  }
+
+  .verify-wrap { display: flex; justify-content: center; margin-bottom: 8px; }
+  .btn-verify {
+    background: var(--gold);
+    color: #3a2a10;
+    font-size: 16px;
+    padding: 11px 26px;
+    border-radius: 6px;
+    border: 2px solid #8a6a2c;
+    box-shadow: 0 3px 0 #7a5c25;
+  }
+  .btn-verify:active { transform: translateY(2px); box-shadow: 0 1px 0 #7a5c25; }
+  .btn-verify:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .feedback {
+    text-align: center;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 17px;
+    margin-top: 14px;
+    min-height: 24px;
+  }
+  .feedback.error { color: var(--error); }
+  .feedback.success { color: var(--success); }
+
+  .direction-result {
+    display: none;
+    margin-top: 10px;
+    text-align: center;
+    animation: fadein 0.6s ease;
+  }
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .arrow-circle {
+    width: 90px; height: 90px;
+    margin: 6px auto 14px;
+    border-radius: 50%;
+    background: var(--teal);
+    border: 3px solid #10302a;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 46px;
+    color: var(--parchment);
+  }
+  .direction-name {
+    font-family: 'Pirata One', serif;
+    font-size: 26px;
+    color: var(--teal);
+    margin-bottom: 18px;
+  }
+
+  .next-wrap { display: flex; justify-content: center; margin-top: 6px; }
+  .btn-next {
+    background: var(--red);
+    color: var(--parchment);
+    font-size: 16px;
+    padding: 12px 28px;
+    border-radius: 40px;
+    border: 2px solid #4d1613;
+    box-shadow: 0 4px 0 #3f1512, 0 6px 10px rgba(0,0,0,0.4);
+  }
+  .btn-next:active { transform: translateY(3px); box-shadow: 0 1px 0 #3f1512; }
+
+  .final-box {
+    display: none;
+    text-align: center;
+  }
+  .final-title {
+    font-family: 'Pirata One', serif;
+    font-size: 30px;
+    color: var(--teal);
+    margin-bottom: 14px;
+  }
+
+  .hidden { display: none; }
+
+  @media (max-width: 480px) {
+    .scroll { padding: 34px 20px 30px; }
+    h1 { font-size: 26px; }
+    .message { font-size: 16px; }
+    .coord-inputs input { width: 64px; height: 48px; font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scroll">
+  <div class="eyebrow">Nunca Jamás &mdash; prueba XII</div>
+  <h1>El código de los tableros</h1>
+
+  <p class="message">
+    &laquo;Si sois tan listos como creéis, ya sabéis qué hacer.&raquo;
+  </p>
+  <p class="message" style="font-size:15px; color: var(--ink-soft); margin-top: 10px;">
+    Introducid las coordenadas de cada tablero, en el orden en que fuisteis consiguiendo
+    los fragmentos. Cuando acertéis las cuatro de un tablero, se os revelará una dirección.
+  </p>
+
+  <div class="divider"><span>&#10022;</span></div>
+
+  <div id="boardSection">
+    <div class="board-badge" id="boardLabel">PRIMERO</div>
+
+    <p class="code-label">Coordenadas de los círculos (letra + número)</p>
+    <div class="coord-inputs">
+      <input type="text" maxlength="3" class="coord-in" id="c1" placeholder="A1">
+      <input type="text" maxlength="3" class="coord-in" id="c2" placeholder="A1">
+      <input type="text" maxlength="3" class="coord-in" id="c3" placeholder="A1">
+      <input type="text" maxlength="3" class="coord-in" id="c4" placeholder="A1">
+    </div>
+    <div class="verify-wrap">
+      <button class="btn-verify" id="verifyBtn" type="button" onclick="checkBoard()">Meter coordenadas</button>
+    </div>
+    <p id="feedback" class="feedback"></p>
+
+    <div id="directionResult" class="direction-result">
+      <div class="arrow-circle" id="arrowIcon">&larr;</div>
+      <div class="direction-name" id="directionName">Izquierda</div>
+      <div class="next-wrap">
+        <button class="btn-next" id="nextBtn" type="button" onclick="nextBoard()">Ir al siguiente tablero</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="finalBox" class="final-box">
+    <div class="divider"><span>&#10022;</span></div>
+    <div class="final-title">¡Las cinco direcciones reveladas!</div>
+    <p class="message">
+      Ya tenéis las cinco direcciones en vuestro cuaderno. Colocad el candado del cofre
+      en ese mismo orden y, si no os habéis equivocado, Campanilla os estará esperando
+      dentro.
+    </p>
+  </div>
+</div>
+
+<script>
+  const boards = [
+    { label: 'PRIMERO', coords: ['B1','D3','E5','H2'], direction: 'izquierda', arrow: '&larr;' },
+    { label: 'SEGUNDO', coords: ['A3','D4','F3','H2'], direction: 'derecha', arrow: '&rarr;' },
+    { label: 'TERCERO', coords: ['A1','C5','E4','G3'], direction: 'arriba', arrow: '&uarr;' },
+    { label: 'CUARTO', coords: ['B3','E1','F5','H2'], direction: 'arriba', arrow: '&uarr;' },
+    { label: 'QUINTO', coords: ['A1','C2','E3','G4'], direction: 'abajo', arrow: '&darr;' }
+  ];
+
+  let current = 0;
+
+  function normalize(str) {
+    return str.trim().toUpperCase().replace(/\s+/g, '');
+  }
+
+  function renderBoard() {
+    const board = boards[current];
+    document.getElementById('boardLabel').textContent = board.label;
+    ['c1','c2','c3','c4'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('feedback').textContent = '';
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('directionResult').style.display = 'none';
+    document.getElementById('verifyBtn').disabled = false;
+    document.getElementById('c1').focus();
+  }
+
+  function checkBoard() {
+    const board = boards[current];
+    const inputs = ['c1','c2','c3','c4'].map(id => normalize(document.getElementById(id).value));
+    const feedback = document.getElementById('feedback');
+
+    if (inputs.some(v => v === '')) {
+      feedback.textContent = 'Rellenad las cuatro coordenadas.';
+      feedback.className = 'feedback error';
+      return;
+    }
+
+    const expected = board.coords.map(normalize).slice().sort();
+    const given = inputs.slice().sort();
+    const isMatch = expected.length === given.length && expected.every((v, i) => v === given[i]);
+
+    if (isMatch) {
+      feedback.textContent = '';
+      feedback.className = 'feedback';
+      document.getElementById('arrowIcon').innerHTML = board.arrow;
+      document.getElementById('directionName').textContent = board.direction.charAt(0).toUpperCase() + board.direction.slice(1);
+      document.getElementById('directionResult').style.display = 'block';
+      document.getElementById('verifyBtn').disabled = true;
+    } else {
+      feedback.textContent = 'ERRÓNEO. Revisad las coordenadas del tablero.';
+      feedback.className = 'feedback error';
+    }
+  }
+
+  function nextBoard() {
+    current++;
+    if (current < boards.length) {
+      renderBoard();
+    } else {
+      document.getElementById('boardSection').style.display = 'none';
+      document.getElementById('finalBox').style.display = 'block';
+      document.getElementById('finalBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function spawnDust() {
+    const dust = document.createElement('div');
+    dust.className = 'dust';
+    const size = 3 + Math.random() * 4;
+    dust.style.width = size + 'px';
+    dust.style.height = size + 'px';
+    dust.style.left = Math.random() * 100 + 'vw';
+    dust.style.top = Math.random() * 100 + 'vh';
+    dust.style.animationDuration = (3 + Math.random() * 3) + 's';
+    document.body.appendChild(dust);
+    setTimeout(() => dust.remove(), 7000);
+  }
+  setInterval(spawnDust, 500);
+  for (let i = 0; i < 10; i++) setTimeout(spawnDust, i * 200);
+</script>
+
+</body>
+</html>
