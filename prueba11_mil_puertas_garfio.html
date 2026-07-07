@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Las Mil Puertas de Garfio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night: #0c1f2e;
+    --night-deep: #081620;
+    --parchment: #e9dcb6;
+    --parchment-dark: #d6c48f;
+    --ink: #2b2013;
+    --ink-soft: #4a3a22;
+    --gold: #c9a24b;
+    --gold-bright: #e3bf6d;
+    --red: #7c2b26;
+    --teal: #1d4a3e;
+    --error: #a33333;
+    --success: #2f5c3a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--night);
+    min-height: 100vh;
+    font-family: 'IM Fell English', serif;
+    color: var(--ink);
+  }
+  body {
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255,255,255,0.06) 0%, transparent 2%),
+      radial-gradient(circle at 80% 30%, rgba(255,255,255,0.05) 0%, transparent 2%),
+      radial-gradient(circle at 60% 70%, rgba(255,255,255,0.04) 0%, transparent 2%),
+      radial-gradient(circle at 35% 85%, rgba(255,255,255,0.05) 0%, transparent 2%),
+      radial-gradient(circle at 90% 80%, rgba(255,255,255,0.04) 0%, transparent 2%),
+      linear-gradient(180deg, var(--night-deep) 0%, var(--night) 60%, #0a1c2a 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 16px 80px;
+  }
+
+  .dust { position: fixed; border-radius: 50%; background: var(--gold-bright); opacity: 0; pointer-events: none;
+    box-shadow: 0 0 6px 2px rgba(227,191,109,0.8); animation: twinkle 4s infinite ease-in-out; }
+  @keyframes twinkle { 0%,100% { opacity: 0; transform: translateY(0) scale(0.6); } 50% { opacity: 0.9; transform: translateY(-12px) scale(1); } }
+
+  .scroll {
+    position: relative;
+    max-width: 620px;
+    width: 100%;
+    background: var(--parchment);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(255,255,255,0.15), transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(0,0,0,0.08), transparent 60%);
+    border: 2px solid var(--ink-soft);
+    border-radius: 6px;
+    padding: 44px 40px 40px;
+    box-shadow: 0 0 0 6px var(--night-deep), 0 20px 50px rgba(0,0,0,0.6);
+  }
+  .scroll::before, .scroll::after {
+    content: "";
+    position: absolute;
+    left: -2px; right: -2px;
+    height: 18px;
+    background: repeating-linear-gradient(90deg, var(--parchment-dark) 0 14px, var(--parchment) 14px 28px);
+    border: 2px solid var(--ink-soft);
+  }
+  .scroll::before { top: -18px; border-radius: 6px 6px 0 0; }
+  .scroll::after { bottom: -18px; border-radius: 0 0 6px 6px; }
+
+  .eyebrow {
+    font-family: 'IM Fell English SC', serif;
+    text-align: center;
+    letter-spacing: 3px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  h1 {
+    font-family: 'Pirata One', serif;
+    text-align: center;
+    font-size: 40px;
+    margin: 0 0 24px;
+    color: var(--red);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+    letter-spacing: 1px;
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 10px; margin: 20px 0;
+    color: var(--gold); opacity: 0.8;
+  }
+  .divider::before, .divider::after {
+    content: ""; flex: 1; height: 1px; background: var(--ink-soft); opacity: 0.4;
+  }
+  .divider span { font-size: 18px; }
+
+  .message {
+    font-size: 19px;
+    line-height: 1.6;
+    font-style: italic;
+    text-align: center;
+    color: var(--ink);
+    padding: 0 6px;
+  }
+  .message.small { font-size: 16px; color: var(--ink-soft); }
+
+  button {
+    font-family: 'IM Fell English SC', serif;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: none;
+  }
+
+  .actions { display: flex; justify-content: center; margin: 30px 0 10px; }
+
+  .btn-seal {
+    background: var(--red);
+    color: var(--parchment);
+    font-size: 18px;
+    padding: 15px 34px;
+    border-radius: 40px;
+    border: 2px solid #4d1613;
+    box-shadow: 0 4px 0 #3f1512, 0 6px 10px rgba(0,0,0,0.4);
+    transition: transform 0.08s ease;
+  }
+  .btn-seal:active { transform: translateY(3px); box-shadow: 0 1px 0 #3f1512; }
+
+  .result {
+    display: none;
+    margin-top: 10px;
+    animation: fadein 0.6s ease;
+  }
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .result-title {
+    font-family: 'Pirata One', serif;
+    text-align: center;
+    color: var(--teal);
+    font-size: 30px;
+    margin: 4px 0 16px;
+  }
+
+  .fragment-box {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  .btn-fragment {
+    background: var(--teal);
+    color: var(--parchment);
+    font-size: 15px;
+    padding: 12px 22px;
+    border-radius: 6px;
+    border: 2px solid #10302a;
+    box-shadow: 0 3px 0 #0d251f;
+  }
+  .btn-fragment.done {
+    background: #4b7a67;
+    opacity: 0.75;
+    box-shadow: none;
+  }
+  .btn-fragment:active:not(.done) { transform: translateY(2px); box-shadow: 0 1px 0 #0d251f; }
+
+  .hidden { display: none; }
+
+  @media (max-width: 480px) {
+    .scroll { padding: 34px 20px 30px; }
+    h1 { font-size: 30px; }
+    .message { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scroll">
+  <div class="eyebrow">Nunca Jamás &mdash; prueba XI</div>
+  <h1>Las mil puertas de Garfio</h1>
+
+  <p class="message">
+    Os habéis colado en el Jolly Roger. Pero los aposentos de Garfio no son fáciles de
+    encontrar. El barco está lleno de puertas falsas, trampas y callejones sin salida.
+    Solo los más listos conseguirán llegar hasta él.
+  </p>
+
+  <p class="message">
+    Ante vosotros hay tres puertas. Solo una lleva hacia adelante. Las otras dos no
+    llevan a ningún lado. Pensad antes de elegir.
+  </p>
+
+  <div class="divider"><span>&#10022;</span></div>
+
+  <div id="startSection" class="actions">
+    <button class="btn-seal" type="button" onclick="showResult()">PRUEBA SUPERADA</button>
+  </div>
+
+  <div id="result" class="result">
+    <p class="result-title">¡Lo habéis conseguido!</p>
+    <p class="message">
+      Habéis cruzado todas las puertas de Garfio. Recoged el último fragmento.
+    </p>
+    <p class="message small">
+      El monitor os entrega <em>El Sueño Eterno</em> (fragmento 5).
+    </p>
+    <div class="fragment-box">
+      <button class="btn-fragment" id="fragmentBtn" type="button" onclick="markFragment()">
+        Sueño Eterno entregado
+      </button>
+    </div>
+
+    <div id="afterFragment" class="hidden">
+      <div class="divider"><span>&#10022;</span></div>
+      <p class="message">
+        Ya estáis en sus aposentos. ¡Salvad a Campanilla antes de que se acabe el tiempo!
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showResult() {
+    document.getElementById('startSection').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function markFragment() {
+    const btn = document.getElementById('fragmentBtn');
+    btn.textContent = 'Fragmento entregado ✓';
+    btn.classList.add('done');
+    document.getElementById('afterFragment').classList.remove('hidden');
+    document.getElementById('afterFragment').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function spawnDust() {
+    const dust = document.createElement('div');
+    dust.className = 'dust';
+    const size = 3 + Math.random() * 4;
+    dust.style.width = size + 'px';
+    dust.style.height = size + 'px';
+    dust.style.left = Math.random() * 100 + 'vw';
+    dust.style.top = Math.random() * 100 + 'vh';
+    dust.style.animationDuration = (3 + Math.random() * 3) + 's';
+    document.body.appendChild(dust);
+    setTimeout(() => dust.remove(), 7000);
+  }
+  setInterval(spawnDust, 500);
+  for (let i = 0; i < 10; i++) setTimeout(spawnDust, i * 200);
+</script>
+
+</body>
+</html>
