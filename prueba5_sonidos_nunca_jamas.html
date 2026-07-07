@@ -238,6 +238,10 @@
     font-size: 22px;
     color: var(--red);
     letter-spacing: 1px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.4;
   }
 
   .hidden { display: none; }
@@ -247,6 +251,12 @@
     h1 { font-size: 32px; }
     .message { font-size: 17px; }
     .code-inputs input { width: 44px; height: 54px; font-size: 24px; }
+    .equation-box { padding: 16px 10px; max-width: 100%; }
+    .equation { font-size: 16px; letter-spacing: 0.5px; }
+  }
+
+  @media (max-width: 360px) {
+    .equation { font-size: 14px; }
   }
 </style>
 </head>
