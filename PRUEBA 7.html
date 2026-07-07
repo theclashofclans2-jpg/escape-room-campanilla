@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>La Cuerda de Polvo de Hada</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night: #0c1f2e;
+    --night-deep: #081620;
+    --parchment: #e9dcb6;
+    --parchment-dark: #d6c48f;
+    --ink: #2b2013;
+    --ink-soft: #4a3a22;
+    --gold: #c9a24b;
+    --gold-bright: #e3bf6d;
+    --red: #7c2b26;
+    --teal: #1d4a3e;
+    --error: #a33333;
+    --success: #2f5c3a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--night);
+    min-height: 100vh;
+    font-family: 'IM Fell English', serif;
+    color: var(--ink);
+  }
+  body {
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255,255,255,0.06) 0%, transparent 2%),
+      radial-gradient(circle at 80% 30%, rgba(255,255,255,0.05) 0%, transparent 2%),
+      radial-gradient(circle at 60% 70%, rgba(255,255,255,0.04) 0%, transparent 2%),
+      radial-gradient(circle at 35% 85%, rgba(255,255,255,0.05) 0%, transparent 2%),
+      radial-gradient(circle at 90% 80%, rgba(255,255,255,0.04) 0%, transparent 2%),
+      linear-gradient(180deg, var(--night-deep) 0%, var(--night) 60%, #0a1c2a 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 16px 80px;
+  }
+
+  .dust { position: fixed; border-radius: 50%; background: var(--gold-bright); opacity: 0; pointer-events: none;
+    box-shadow: 0 0 6px 2px rgba(227,191,109,0.8); animation: twinkle 4s infinite ease-in-out; }
+  @keyframes twinkle { 0%,100% { opacity: 0; transform: translateY(0) scale(0.6); } 50% { opacity: 0.9; transform: translateY(-12px) scale(1); } }
+
+  .scroll {
+    position: relative;
+    max-width: 620px;
+    width: 100%;
+    background: var(--parchment);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(255,255,255,0.15), transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(0,0,0,0.08), transparent 60%);
+    border: 2px solid var(--ink-soft);
+    border-radius: 6px;
+    padding: 44px 40px 40px;
+    box-shadow: 0 0 0 6px var(--night-deep), 0 20px 50px rgba(0,0,0,0.6);
+  }
+  .scroll::before, .scroll::after {
+    content: "";
+    position: absolute;
+    left: -2px; right: -2px;
+    height: 18px;
+    background: repeating-linear-gradient(90deg, var(--parchment-dark) 0 14px, var(--parchment) 14px 28px);
+    border: 2px solid var(--ink-soft);
+  }
+  .scroll::before { top: -18px; border-radius: 6px 6px 0 0; }
+  .scroll::after { bottom: -18px; border-radius: 0 0 6px 6px; }
+
+  .eyebrow {
+    font-family: 'IM Fell English SC', serif;
+    text-align: center;
+    letter-spacing: 3px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  h1 {
+    font-family: 'Pirata One', serif;
+    text-align: center;
+    font-size: 40px;
+    margin: 0 0 24px;
+    color: var(--red);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+    letter-spacing: 1px;
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 10px; margin: 20px 0;
+    color: var(--gold); opacity: 0.8;
+  }
+  .divider::before, .divider::after {
+    content: ""; flex: 1; height: 1px; background: var(--ink-soft); opacity: 0.4;
+  }
+  .divider span { font-size: 18px; }
+
+  .message {
+    font-size: 19px;
+    line-height: 1.6;
+    font-style: italic;
+    text-align: center;
+    color: var(--ink);
+    padding: 0 6px;
+  }
+  .message.small { font-size: 16px; color: var(--ink-soft); }
+
+  .reminder-box {
+    margin: 22px auto 6px;
+    max-width: 480px;
+    background: #f4ead0;
+    border: 2px dashed var(--ink-soft);
+    border-radius: 8px;
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .reminder-box p {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 15px;
+    color: var(--ink-soft);
+    letter-spacing: 0.5px;
+    margin: 6px 0;
+  }
+  .reminder-box .icon { font-size: 20px; margin-right: 6px; }
+
+  button {
+    font-family: 'IM Fell English SC', serif;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: none;
+  }
+
+  .code-section { margin-top: 10px; }
+  .code-label {
+    text-align: center;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+  }
+
+  .text-input-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .text-input-wrap input {
+    width: 100%;
+    max-width: 380px;
+    height: 56px;
+    text-align: center;
+    font-size: 20px;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: var(--ink);
+    background: #f4ead0;
+    border: 2px solid var(--ink-soft);
+    border-radius: 8px;
+    outline: none;
+    padding: 0 16px;
+  }
+  .text-input-wrap input::placeholder { color: #a99568; opacity: 1; }
+  .text-input-wrap input:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(124,43,38,0.2);
+  }
+
+  .verify-wrap { display: flex; justify-content: center; margin-bottom: 8px; }
+  .btn-verify {
+    background: var(--gold);
+    color: #3a2a10;
+    font-size: 16px;
+    padding: 11px 26px;
+    border-radius: 6px;
+    border: 2px solid #8a6a2c;
+    box-shadow: 0 3px 0 #7a5c25;
+  }
+  .btn-verify:active { transform: translateY(2px); box-shadow: 0 1px 0 #7a5c25; }
+
+  .feedback {
+    text-align: center;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 16px;
+    margin-top: 14px;
+    min-height: 24px;
+    line-height: 1.5;
+  }
+  .feedback.error { color: var(--error); }
+  .feedback.success { color: var(--success); }
+
+  .result {
+    display: none;
+    margin-top: 10px;
+    animation: fadein 0.6s ease;
+  }
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .result-title {
+    font-family: 'Pirata One', serif;
+    text-align: center;
+    color: var(--teal);
+    font-size: 30px;
+    margin: 4px 0 16px;
+  }
+
+  .fragment-box {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  .btn-fragment {
+    background: var(--teal);
+    color: var(--parchment);
+    font-size: 15px;
+    padding: 12px 22px;
+    border-radius: 6px;
+    border: 2px solid #10302a;
+    box-shadow: 0 3px 0 #0d251f;
+  }
+  .btn-fragment.done {
+    background: #4b7a67;
+    opacity: 0.75;
+    box-shadow: none;
+  }
+  .btn-fragment:active:not(.done) { transform: translateY(2px); box-shadow: 0 1px 0 #0d251f; }
+
+  .coord-box {
+    margin: 18px auto 6px;
+    max-width: 480px;
+    background: #f4ead0;
+    border: 2px dashed var(--ink-soft);
+    border-radius: 8px;
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .coord-box .coord {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 18px;
+    color: var(--red);
+    letter-spacing: 1px;
+  }
+
+  .hidden { display: none; }
+
+  @media (max-width: 480px) {
+    .scroll { padding: 34px 20px 30px; }
+    h1 { font-size: 30px; }
+    .message { font-size: 17px; }
+    .text-input-wrap input { font-size: 17px; height: 50px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scroll">
+  <div class="eyebrow">Nunca Jamás &mdash; prueba VII</div>
+  <h1>Localización del velero</h1>
+
+  <div id="codeSection" class="code-section">
+    <p class="code-label">¿Cuál es el destino final?</p>
+    <div class="text-input-wrap">
+      <input type="text" id="destino" placeholder="Escribid el nombre del lugar" autocomplete="off">
+    </div>
+    <div class="verify-wrap">
+      <button class="btn-verify" type="button" onclick="checkCode()">Comprobar destino</button>
+    </div>
+    <p id="feedback" class="feedback"></p>
+  </div>
+
+  <div id="result" class="result">
+    <div class="divider"><span>&#10022;</span></div>
+    <p class="result-title">¡Muy bien!</p>
+    <p class="message">
+      Ya os puedo decir dónde está el velero. También tenéis la llave.
+      Y sabéis dónde está la Jolly Roger. Pero os falta el timón para poder
+      navegar el velero. Es clave que lo consigáis y demostréis definitivamente
+      que no sois piratas.
+    </p>
+    <p class="message small">
+      Os hago entrega del tercer fragmento de polvo de hada: <em>El Eco del Viento</em>.
+    </p>
+    <div class="fragment-box">
+      <button class="btn-fragment" id="fragmentBtn" type="button" onclick="markFragment()">
+        Eco del Viento entregado
+      </button>
+    </div>
+
+    <div id="afterFragment" class="hidden">
+      <div class="divider"><span>&#10022;</span></div>
+
+      <p class="message">
+        Bien. El velero está en lo que vosotros llamáis <strong>Sala de monitores</strong>.
+        También sabéis que la Jolly Roger está en &laquo;40&deg;20'39.8" N, 5&deg;50'48.1" W&raquo;.
+        En el velero hay un mapa para llegar hasta allí. Pero primero, necesitáis un timón.
+      </p>
+      <p class="message">
+        Está escondido en un baúl con un símbolo de timón. Tiene un código de 5 números.
+        Para abrirlo, tendréis que superar 5 pruebas mentales. Suerte.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function normalize(str) {
+    return str
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z\s]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  const validAnswers = ['el jardin secreto', 'jardin secreto'];
+
+  function checkCode() {
+    const input = document.getElementById('destino');
+    const feedback = document.getElementById('feedback');
+    const value = normalize(input.value);
+
+    if (!value) {
+      feedback.textContent = 'Debéis escribir un destino.';
+      feedback.className = 'feedback error';
+      return;
+    }
+
+    if (validAnswers.includes(value)) {
+      feedback.textContent = '';
+      feedback.className = 'feedback';
+      document.getElementById('codeSection').style.display = 'none';
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+      feedback.textContent = 'ERRÓNEO. Habéis desviado el rumbo... revisad la ruta con calma (penalización: 5 minutos).';
+      feedback.className = 'feedback error';
+    }
+  }
+
+  document.getElementById('destino').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') checkCode();
+  });
+
+  function markFragment() {
+    const btn = document.getElementById('fragmentBtn');
+    btn.textContent = 'Fragmento entregado ✓';
+    btn.classList.add('done');
+    document.getElementById('afterFragment').classList.remove('hidden');
+    document.getElementById('afterFragment').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function spawnDust() {
+    const dust = document.createElement('div');
+    dust.className = 'dust';
+    const size = 3 + Math.random() * 4;
+    dust.style.width = size + 'px';
+    dust.style.height = size + 'px';
+    dust.style.left = Math.random() * 100 + 'vw';
+    dust.style.top = Math.random() * 100 + 'vh';
+    dust.style.animationDuration = (3 + Math.random() * 3) + 's';
+    document.body.appendChild(dust);
+    setTimeout(() => dust.remove(), 7000);
+  }
+  setInterval(spawnDust, 500);
+  for (let i = 0; i < 10; i++) setTimeout(spawnDust, i * 200);
+</script>
+
+</body>
+</html>
